@@ -3,10 +3,24 @@ const games = [
     "Game 1", "Game 2", "Game 3", "Game 4", "Game 5"
 ];
 
+// Unique colors for each game
+const colors = [
+    '#f9c74f', // Yellow
+    '#90be6d', // Green
+    '#f94144', // Red
+    '#577590', // Blue
+    '#f3722c', // Orange
+];
+
 const canvas = document.getElementById('wheel');
 const ctx = canvas.getContext('2d');
 const spinButton = document.getElementById('spin-button');
 const selectedGameDiv = document.getElementById('selected-game');
+
+// Create a triangle indicator
+const triangle = document.createElement('div');
+triangle.className = 'triangle';
+document.body.appendChild(triangle);
 
 const wheelRadius = canvas.width / 2;
 const numSlices = games.length;
@@ -19,8 +33,8 @@ let selectedGame = '';
 
 function drawWheel() {
     for (let i = 0; i < numSlices; i++) {
-        // Set the colors alternately
-        const color = i % 2 === 0 ? '#f9c74f' : '#90be6d';
+        // Use unique colors or default if not enough colors
+        const color = colors[i % colors.length];
 
         // Calculate the angle of each slice
         const angle = startAngle + i * sliceAngle;
@@ -30,6 +44,8 @@ function drawWheel() {
         ctx.arc(wheelRadius, wheelRadius, wheelRadius, angle, angle + sliceAngle);
         ctx.fillStyle = color;
         ctx.fill();
+        ctx.strokeStyle = '#000'; // Black border
+        ctx.lineWidth = 2; // Border thickness
         ctx.stroke();
 
         // Add game names
@@ -47,7 +63,7 @@ function drawWheel() {
 function spinWheel() {
     if (spinning) return;
     spinning = true;
-    
+
     // Set random spin duration and final angle
     let spinTime = Math.random() * 3000 + 2000;
     let totalSpins = Math.random() * 3600 + 360;
@@ -76,6 +92,10 @@ function drawSpinningWheel() {
     ctx.translate(-wheelRadius, -wheelRadius);
     drawWheel();
     ctx.restore();
+
+    // Update triangle position
+    const finalAngle = currentAngle % 360;
+    triangle.style.transform = `translate(-50%, -50%) rotate(${finalAngle}deg)`;
 }
 
 function finalizeSpin() {
