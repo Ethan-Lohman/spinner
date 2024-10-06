@@ -16,6 +16,8 @@ h1 {
 .wheel-container {
     position: relative;
     margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
 }
 
 #spin-button {
@@ -39,15 +41,16 @@ h1 {
     color: #333;
 }
 
+/* Triangle Styles */
 .triangle {
     width: 0;
     height: 0;
-    border-left: 20px solid transparent;
-    border-right: 20px solid transparent;
-    border-bottom: 30px solid #ff0000; /* Color of the triangle */
+    border-left: 10px solid transparent;   /* Adjust the triangle width */
+    border-right: 10px solid transparent;  /* Adjust the triangle width */
+    border-bottom: 20px solid #ff0000;     /* Color of the triangle */
     position: absolute;
-    top: 10px; /* Position above the wheel */
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 10; /* Ensure it's above the wheel */
+    top: 50%;                             /* Center vertically */
+    left: 50%;                            /* Center horizontally */
+    transform: translate(-50%, -100%);   /* Move it up to touch the wheel */
+    z-index: 10;                          /* Ensure it's above the wheel */
 }

@@ -1,6 +1,6 @@
 // Game list
 const games = [
-    "Game 1", "Game 2", "Game 3", "Game 4", "Game 5"
+    "Baldurs Gate 3", "Factorio", "Barotrauma", "Rainbow Six Siege", ""
 ];
 
 // Unique colors for each game
@@ -95,13 +95,17 @@ function drawSpinningWheel() {
 
     // Update triangle position
     const finalAngle = currentAngle % 360;
-    triangle.style.transform = `translate(-50%, -50%) rotate(${finalAngle}deg)`;
+    triangle.style.transform = `translate(-50%, -100%) rotate(${finalAngle}deg)`;
 }
 
 function finalizeSpin() {
     spinning = false;
     const finalAngle = currentAngle % 360;
-    const sliceIndex = Math.floor(((360 - finalAngle) / 360) * numSlices) % numSlices;
+    
+    // Determine the index of the winning slice
+    const adjustedAngle = (360 - finalAngle) % 360; // Invert the angle for slice calculation
+    const sliceIndex = Math.floor(adjustedAngle / (360 / numSlices)) % numSlices;
+
     selectedGame = games[sliceIndex];
     selectedGameDiv.textContent = `Selected Game: ${selectedGame}`;
 }
