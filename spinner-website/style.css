@@ -47,9 +47,9 @@ h1 {
     height: 0;
     border-left: 20px solid transparent;
     border-right: 20px solid transparent;
-    border-top: 30px solid #ff0000;  /* Triangle color */
+    border-bottom: 30px solid #ff0000;  /* Triangle color */
     position: absolute;
-    top: -40px; /* Moves the triangle outside the wheel */
+    top: -50px; /* Moves the triangle outside the wheel */
     left: 50%;
     transform: translateX(-50%);
     z-index: 10;

@@ -1,6 +1,6 @@
 // Game list
 const games = [
-    "Baldurs Gate 3", "Factorio", "Barotrauma", "Rainbow Six Siege", "Random Game Aquired By A Certain Mean", "Stellaris", "Chained Together", ""
+    "Baldurs Gate 3", "Factorio", "Barotrauma", "Rainbow Six Siege", "Random P1r@t3d Game", "Stellaris", "Chained Together", "Roblox", "Supermarket Together", "Spin Again", ""
 ];
 
 // Unique colors for each game
@@ -27,6 +27,7 @@ const numSlices = games.length;
 const sliceAngle = 2 * Math.PI / numSlices;
 
 let startAngle = 0;
+let currentAngle = 0;
 let spinning = false;
 let selectedGame = '';
 
@@ -61,22 +62,43 @@ function spinWheel() {
     if (spinning) return;
     spinning = true;
 
-    // Randomize the spin, ensuring the wheel stops at a random angle
-    const randomSpinAngle = Math.random() * 2 * Math.PI * 5; // Spin multiple times (5x)
-    startAngle += randomSpinAngle;
+    // Set random spin duration and final angle
+    let spinTime = Math.random() * 3000 + 2000;
+    let totalSpins = Math.random() * 3600 + 360;
 
+    let startTime = null;
+    function animateSpin(time) {
+        if (!startTime) startTime = time;
+
+        const elapsed = time - startTime;
+        currentAngle = (elapsed / spinTime) * totalSpins;
+        if (elapsed < spinTime) {
+            drawSpinningWheel();
+            requestAnimationFrame(animateSpin);
+        } else {
+            finalizeSpin();
+        }
+    }
+    requestAnimationFrame(animateSpin);
+}
+
+function drawSpinningWheel() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.save();
+    ctx.translate(wheelRadius, wheelRadius);
+    ctx.rotate(currentAngle * Math.PI / 180);
+    ctx.translate(-wheelRadius, -wheelRadius);
     drawWheel();
-
-    // Determine the winning slice based on the final angle
-    finalizeSpin();
+    ctx.restore();
 }
 
 function finalizeSpin() {
     spinning = false;
-
-    // Calculate the final angle under the triangle (which is at angle 0)
-    const finalAngle = (2 * Math.PI - startAngle % (2 * Math.PI)) % (2 * Math.PI);
-    const sliceIndex = Math.floor(finalAngle / sliceAngle) % numSlices;
+    const finalAngle = currentAngle % 360;
+    
+    // Determine the index of the winning slice
+    const adjustedAngle = (360 - finalAngle) % 360; // Invert the angle for slice calculation
+    const sliceIndex = Math.floor(adjustedAngle / (360 / numSlices)) % numSlices;
 
     selectedGame = games[sliceIndex];
     selectedGameDiv.textContent = `Selected Game: ${selectedGame}`;
