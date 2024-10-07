@@ -41,16 +41,20 @@ h1 {
     color: #333;
 }
 
-/* Triangle Styles */
+/* Updated Triangle Styles */
 .triangle {
     width: 0;
     height: 0;
-    border-left: 20px solid transparent;
-    border-right: 20px solid transparent;
-    border-bottom: 30px solid #ff0000;  /* Triangle color */
+    border-top: 20px solid transparent;
+    border-bottom: 20px solid transparent;
+    border-left: 30px solid #5e6866;  /* Triangle color */
     position: absolute;
-    top: -50px; /* Moves the triangle outside the wheel */
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 10;
+    top: 50%;  /* Center vertically */
+    right: -15px;  /* Adjust to touch the wheel's edge */
+    transform: translateY(-50%) rotate(180deg);  /* Ensure proper vertical centering */
+    z-index: 10;  /* Ensure it's above the wheel */
+    filter: drop-shadow(-1px 0 0 black) 
+            drop-shadow(1px 0 0 black)
+            drop-shadow(0 -1px 0 black)
+            drop-shadow(0 1px 0 black);
 }

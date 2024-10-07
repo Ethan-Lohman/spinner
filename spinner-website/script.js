@@ -1,26 +1,29 @@
 // Game list
 const games = [
-    "Baldurs Gate 3", "Factorio", "Barotrauma", "Rainbow Six Siege", "Random P1r@t3d Game", "Stellaris", "Chained Together", "Roblox", "Supermarket Together", "Spin Again", ""
+    "Baldurs Gate 3", "Factorio", "Barotrauma", "Rainbow Six Siege", 
+    "Stellaris", "Chained Together", "Roblox", "Supermarket Together", 
+    "Wildcard", "Buy A New Game", "Hearts Of Iron IV", "Fortnite",
+    "Crusader Kings III", "Lethal Company", "Helldivers 2", "Minecraft", 
+    
 ];
 
 // Unique colors for each game
 const colors = [
-    '#f9c74f', // Yellow
-    '#90be6d', // Green
-    '#f94144', // Red
-    '#577590', // Blue
-    '#f3722c', // Orange
+    '#ff0000', // Red
+    '#ff4500', // Orange
+    '#ffff00', // Yellow
+    '#00ff00', // Lime
+    '#008000', // Green
+    '#00bfff', // Sky Blue
+    '#0000ff', // Blue
+    '#8a2be2', // Violet
 ];
+
 
 const canvas = document.getElementById('wheel');
 const ctx = canvas.getContext('2d');
 const spinButton = document.getElementById('spin-button');
 const selectedGameDiv = document.getElementById('selected-game');
-
-// Create a triangle indicator
-const triangle = document.createElement('div');
-triangle.className = 'triangle';
-document.body.appendChild(triangle);
 
 const wheelRadius = canvas.width / 2;
 const numSlices = games.length;
@@ -32,6 +35,7 @@ let spinning = false;
 let selectedGame = '';
 
 function drawWheel() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     for (let i = 0; i < numSlices; i++) {
         const color = colors[i % colors.length];
         const angle = startAngle + i * sliceAngle;
@@ -42,8 +46,8 @@ function drawWheel() {
         ctx.arc(wheelRadius, wheelRadius, wheelRadius, angle, angle + sliceAngle);
         ctx.fillStyle = color;
         ctx.fill();
-        ctx.strokeStyle = '#000'; // Black border
-        ctx.lineWidth = 2; // Border thickness
+        ctx.strokeStyle = '#000';
+        ctx.lineWidth = 2;
         ctx.stroke();
 
         // Add game names
@@ -52,8 +56,8 @@ function drawWheel() {
         ctx.rotate(angle + sliceAngle / 2);
         ctx.textAlign = "right";
         ctx.fillStyle = "#000";
-        ctx.font = "18px Arial";
-        ctx.fillText(games[i], wheelRadius - 10, 10);
+        ctx.font = "bold 16px Arial";
+        ctx.fillText(games[i], wheelRadius - 10, 5);
         ctx.restore();
     }
 }
@@ -62,17 +66,22 @@ function spinWheel() {
     if (spinning) return;
     spinning = true;
 
-    // Set random spin duration and final angle
     let spinTime = Math.random() * 3000 + 2000;
-    let totalSpins = Math.random() * 3600 + 360;
+    let totalRotation = Math.random() * 10 + 5; // 5 to 15 full rotations
 
     let startTime = null;
     function animateSpin(time) {
         if (!startTime) startTime = time;
 
         const elapsed = time - startTime;
-        currentAngle = (elapsed / spinTime) * totalSpins;
-        if (elapsed < spinTime) {
+        const progress = elapsed / spinTime;
+        
+        // Easing function for smooth deceleration
+        const easeOut = (t) => 1 - Math.pow(1 - t, 3);
+        
+        currentAngle = easeOut(progress) * totalRotation * 2 * Math.PI;
+        
+        if (progress < 1) {
             drawSpinningWheel();
             requestAnimationFrame(animateSpin);
         } else {
@@ -83,10 +92,9 @@ function spinWheel() {
 }
 
 function drawSpinningWheel() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.save();
     ctx.translate(wheelRadius, wheelRadius);
-    ctx.rotate(currentAngle * Math.PI / 180);
+    ctx.rotate(currentAngle);
     ctx.translate(-wheelRadius, -wheelRadius);
     drawWheel();
     ctx.restore();
@@ -94,14 +102,19 @@ function drawSpinningWheel() {
 
 function finalizeSpin() {
     spinning = false;
-    const finalAngle = currentAngle % 360;
-    
-    // Determine the index of the winning slice
-    const adjustedAngle = (360 - finalAngle) % 360; // Invert the angle for slice calculation
-    const sliceIndex = Math.floor(adjustedAngle / (360 / numSlices)) % numSlices;
+
+    // Calculate the winning slice based on the final angle
+    const normalizedAngle = (currentAngle % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI);
+    const sliceIndex = Math.floor(numSlices - (normalizedAngle / (2 * Math.PI) * numSlices)) % numSlices;
 
     selectedGame = games[sliceIndex];
-    selectedGameDiv.textContent = `Selected Game: ${selectedGame}`;
+    if (selectedGame === "Buy A New Game") {
+        // Generate a random budget between $5 and $60
+        const budget = Math.floor(Math.random() * (60 - 10 + 1)) + 5;
+        selectedGameDiv.textContent = `Selected: Buy A New Game - Budget: $${budget}`;
+    } else {
+        selectedGameDiv.textContent = `Selected Game: ${selectedGame}`;
+    }
 }
 
 spinButton.addEventListener('click', spinWheel);
