@@ -3,7 +3,7 @@ const games = [
     "Baldurs Gate 3", "Factorio", "Barotrauma", "Rainbow Six Siege", 
     "Stellaris", "Chained Together", "Roblox", "Supermarket Together", 
     "Wildcard", "Buy A New Game", "Hearts Of Iron IV", "Fortnite",
-    "Crusader Kings III", "Lethal Company", "Helldivers 2", "Minecraft", 
+    "Crusader Kings III", "Starbound", "Helldivers 2", "Minecraft",
     
 ];
 
